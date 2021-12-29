@@ -16,41 +16,40 @@ class Node {
 
 class LRUCache {
     final int capacity;
+    final HashMap<Integer, Node> map = new HashMap<>();
     int curSize = 0;
-    Node head = null;
-    Node tail = null;
-    HashMap<Integer, Node> map = new HashMap<>();
-        
+    Node head = null, tail = null;
+    
     public LRUCache(int capacity) {
         this.capacity = capacity;
     }
     
     public int get(int key) {
         //System.out.println("GET: " + key + " H: " + head + " T: " + tail + " S: " + curSize);
-
-        if (map.containsKey(key)) {
-            Node node = map.get(key);
-            remove(node);
-            put(key, node.val);
-            return node.val;
-        } else
-            return -1;
+        Node node = map.get(key);
+        if (node == null) return -1;
+        this.put(key, node.val);
+        return node.val;
     }
     
     public void put(int key, int value) {
         //System.out.println("PUT: " + key + " : " + value + " H: " + head + " T: " + tail +  " S: " + curSize);
-        if (map.containsKey(key)) remove(map.get(key));
+        this.remove(map.get(key));
         if (curSize == capacity) remove(tail);
-        
-        Node newNode = new Node(value, key, null, head);
-        map.put(key, newNode);
-        if (head != null) head.prev = newNode;
-        head = newNode;
-        if (tail == null) tail = newNode;
+        this.append(key, value);
+    }
+    
+    public void append(int key, int value) {
+        final Node node = new Node(value, key, null, head);
+        map.put(key, node);
+        if (head != null) head.prev = node;
+        head = node;
+        if (tail == null) tail = node;
         curSize++;
     }
     
     public void remove(Node node) {
+        if (node == null) return;
         if (node == head) head = node.next;
         if (node == tail) tail = node.prev;
         if (node.next != null) node.next.prev = node.prev;
