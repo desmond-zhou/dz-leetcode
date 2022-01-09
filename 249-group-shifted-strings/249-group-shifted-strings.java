@@ -22,7 +22,6 @@ class Solution {
             int cycleOffset = ((c - minC) + 26 ) % 26;
             sb.append((char)(cycleOffset + 'a')) ;
         }
-        System.out.println("set: " + s + "--" + sb.toString());
         return sb.toString();
     }
 }
