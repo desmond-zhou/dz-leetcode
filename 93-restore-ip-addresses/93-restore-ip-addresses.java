@@ -28,8 +28,9 @@ class Solution {
                 restore(s.substring(i+1, s.length()), soFar, remainingSeg - 1, result);
                 soFar.setLength(originalLength);
             }
+            
             if (num == 0) {
-                break;
+                break; // if processed zero, then have to go to the next segment
             }
         }
     }
