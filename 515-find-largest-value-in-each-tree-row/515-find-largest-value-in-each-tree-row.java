@@ -1,41 +1,62 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Item {
+    public TreeNode node;
+    public Integer layer;
+    public Item(TreeNode node, Integer layer) {
+        this.node = node;
+        this.layer = layer;
+    }
+}
+
 class Solution {
     public List<Integer> largestValues(TreeNode root) {
+        LinkedList<Item> items = new LinkedList<>(); 
+        ArrayList<Integer> max = new ArrayList<>();
+        
         if (root == null) {
-            return new ArrayList<Integer>();
+            return new ArrayList<>();
         }
-        LinkedList<Pair<TreeNode, Integer>> traversal = new LinkedList<Pair<TreeNode, Integer>>();
-        
-        ArrayList<Integer> result = new ArrayList<Integer>();
-        int level = 0;
-        int buffer = Integer.MIN_VALUE;
-        traversal.add(new Pair<TreeNode, Integer>(root, level));
-
-        while(!traversal.isEmpty()) {
-            Pair<TreeNode, Integer> temp = traversal.remove();
-            if (temp.getValue() != level) {
-                result.add(buffer);
-                level = temp.getValue();
-                buffer = Integer.MIN_VALUE;
+         
+        int curLayer = 1;
+        items.add(new Item(root, 1));
+        Integer curMax = null;  
+        while(!items.isEmpty()){
+            Item item = items.poll();
+            if (item.layer > curLayer) {
+                max.add(curMax);
+                curLayer = curLayer + 1;
+                curMax = item.node.val;
+            } else {
+                if (curMax == null || item.node.val > curMax) {
+                    curMax = item.node.val;
+                }
             }
             
-            System.out.println(temp.getKey());
-            if (temp.getKey().val > buffer) {
-                buffer = temp.getKey().val;
-            }
+            if (item.node.left != null) {
+                items.add(new Item(item.node.left, item.layer + 1));
+            } 
             
-            if (temp.getKey().left != null) {
-                traversal.add(new Pair<TreeNode, Integer>(temp.getKey().left, temp.getValue() + 1));
-            }
-            if (temp.getKey().right != null) {
-                traversal.add(new Pair<TreeNode, Integer>(temp.getKey().right, temp.getValue() + 1));
-
+            if (item.node.right != null) {
+                items.add(new Item(item.node.right, item.layer + 1));
             }
         }
         
-        if (level != result.size() + 1) {
-            result.add(buffer);
-        }
+        max.add(curMax);
         
-        return result;
+        return max;
     }
 }
