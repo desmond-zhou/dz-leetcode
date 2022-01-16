@@ -26,7 +26,7 @@ class Solution {
             }
         }
         
-        return bestDis;
+        return bestDis; //check for the return to align.
     }
 }
 
