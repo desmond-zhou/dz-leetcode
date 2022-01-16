@@ -46,10 +46,8 @@ class Solution {
     
     private void conditionalUpdate(int index, int tentativeDis, PriorityQueue<int[]> pq, boolean[] visited, int[] bestSteps) {
         if (index >= 0 && index < bestSteps.length && !visited[index]) {
-            if (tentativeDis < bestSteps[index]) {
-                bestSteps[index] = tentativeDis;
-            }
-            pq.offer(new int[]{tentativeDis, index});
+            if (tentativeDis < bestSteps[index]) bestSteps[index] = tentativeDis;
+            pq.offer(new int[]{tentativeDis, index}); //BUG have to add all to pq
         }
     }
 }
