@@ -43,7 +43,8 @@ class Solution {
                 cursor = timestamp;
             } else if (type == 1) {
                 runningProcess.compute(id, (k,v) -> (v-1 == 0) ? null : v-1);
-                while (!orderProcess.isEmpty() && (!runningProcess.containsKey(orderProcess.peek()[0]) || runningProcess.get(orderProcess.peek()[0]) < orderProcess.peek()[1]))
+                while (!orderProcess.isEmpty() && (!runningProcess.containsKey(orderProcess.peek()[0]) 
+                                                   || runningProcess.get(orderProcess.peek()[0]) < orderProcess.peek()[1]))
                     orderProcess.pop();
                 
                 if (currentProcess != null) {
