@@ -2,7 +2,6 @@ class Solution {
     public int[] exclusiveTime(int n, List<String> logs) {
         HashMap<Integer, Integer> runningProcess = new HashMap<>();
         Stack<int[]> orderProcess = new Stack<>();
-        HashMap<Integer, Integer> result = new HashMap<>();
         
         int[][] logSequence = new int[logs.size()][3];
         int addIndex = 0;
@@ -20,6 +19,7 @@ class Solution {
             else return Integer.compare(a[2], b[2]);
         });
         
+        HashMap<Integer, Integer> result = new HashMap<>();
         int cursor = 0;
         Integer currentProcess = null;
         for (int i = 0; i < logSequence.length; i++) {
