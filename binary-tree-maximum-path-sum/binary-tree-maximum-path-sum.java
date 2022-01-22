@@ -14,12 +14,14 @@
  * }
  */
 class Solution {
+    HashMap<TreeNode, Integer> armMemo = new HashMap<>();
+    
     public int maxPathSum(TreeNode root) {
         return path(root);
     }
     
     private int path(TreeNode root) {
-        if (root == null) return Integer.MIN_VALUE;
+        if (root == null) return Integer.MIN_VALUE; //BUG path must have at least a single
         
         int pathL = path(root.left);
         int pathR = path(root.right);
@@ -31,8 +33,11 @@ class Solution {
     
     private int arm(TreeNode root) {
         if (root == null) return 0;
+        if (armMemo.containsKey(root)) return armMemo.get(root);
+        
         int arm = Math.max(0, root.val + Math.max(arm(root.left), arm(root.right)));
         //System.out.println("arm: " + root.val + ":" + arm);
+        armMemo.put(root, arm);
         return arm;
     }
 }
