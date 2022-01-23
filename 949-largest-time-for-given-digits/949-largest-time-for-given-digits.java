@@ -6,7 +6,7 @@ class Solution {
             arr[i] = arr[arr.length - 1 - i];
             arr[arr.length - 1 - i] = tmp;
         }
-        System.out.println("Arr: " + Arrays.toString(arr));
+        //System.out.println("Arr: " + Arrays.toString(arr));
         for (int c1 = 0 ; c1 < arr.length; c1++) {
             for (int c2 = 0; c2 < arr.length; c2 ++) {
                 if (c1 == c2) continue;
