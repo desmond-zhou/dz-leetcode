@@ -1,27 +1,36 @@
 class Solution {
     public List<List<String>> groupStrings(String[] strings) {
-        HashMap<String, ArrayList<String>> groups = new HashMap<>();
+        HashMap<List<Integer>,List<String>> groups = new HashMap<List<Integer>, List<String>>();
         for (String s : strings) {
-            String key = normalize(s);
-            groups.putIfAbsent(key, new ArrayList<String>());
-            groups.get(key).add(s);
+            List<Integer> normalized = normalize(s);
+            groups.putIfAbsent(normalized, new ArrayList<String>());
+            groups.get(normalized).add(s);
         }
         
         List<List<String>> result = new ArrayList<>();
-        for (HashMap.Entry<String, ArrayList<String>> e : groups.entrySet()) {
-            result.add(e.getValue());
+        for (Map.Entry<List<Integer>, List<String>> entry : groups.entrySet()) {
+            result.add(entry.getValue());
         }
-        
         return result;
     }
     
-    private String normalize(String s) {
-        char minC  = s.charAt(0);
-        StringBuilder sb = new StringBuilder();
-        for (char c : s.toCharArray()) {
-            int cycleOffset = ((c - minC) + 26 ) % 26;
-            sb.append((char)(cycleOffset + 'a')) ;
+    private List<Integer> normalize(String input) {
+        List<Integer> diffList = new ArrayList<>();
+        char prev = input.charAt(0);
+        for (int i = 1; i < input.length(); i++) {
+            char cur = input.charAt(i);
+            int diff = cur - prev;
+            if (diff < 0) diff += 26;
+            diffList.add(diff);
+            prev = cur;
         }
-        return sb.toString();
+        System.out.println("s: " + input + " diff: " + diffList);
+        return diffList;
     }
 }
+
+
+//diff: -1
+//ba = 28, 27
+//diff: -1
+//az = 27, 26
