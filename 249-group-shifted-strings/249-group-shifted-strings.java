@@ -24,7 +24,7 @@ class Solution {
             diffList.add(diff);
             prev = cur;
         }
-        System.out.println("s: " + input + " diff: " + diffList);
+        // System.out.println("s: " + input + " diff: " + diffList);
         return diffList;
     }
 }
