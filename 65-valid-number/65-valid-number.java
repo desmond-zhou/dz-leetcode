@@ -1,44 +1,64 @@
 class Solution {
-    // This is the DFA we have designed above
-    private static final List<Map<String, Integer>> dfa = List.of(
-        Map.of("digit", 1, "sign", 2, "dot", 3),
-        Map.of("digit", 1, "dot", 4, "exponent", 5), 
-        Map.of("digit", 1, "dot", 3), 
-        Map.of("digit", 4), 
-        Map.of("digit", 4, "exponent", 5),
-        Map.of("sign", 6, "digit", 7),
-        Map.of("digit", 7),
-        Map.of("digit", 7)
-    );
-
-    // These are all of the valid finishing states for our DFA.
-    private static final Set<Integer> validFinalStates = Set.of(1, 4, 7);
-
     public boolean isNumber(String s) {
-        int currentState = 0;
-        String group = "";
-        
-        for (int i = 0; i < s.length(); i++) {
-            char curr = s.charAt(i);
-            if (Character.isDigit(curr)) {
-                group = "digit";
-            } else if (curr == '+' || curr == '-') {
-                group = "sign";
-            } else if (curr == 'e' || curr == 'E') {
-                group = "exponent";
-            } else if (curr == '.') {
-                group = "dot";
-            } else {
-                return false;
-            }
-            
-            if (!dfa.get(currentState).containsKey(group)) {
-                return false;
-            }
-            
-            currentState = dfa.get(currentState).get(group);
+        String state = "EMPTY";
+        for (char c : s.toCharArray()) {
+            state = stateTransition(c, state);
+            System.out.println("Char: " + c + " : " + state);
         }
-        
-        return validFinalStates.contains(currentState);
+        String end = stateTransition('#', state);
+        return end == "DONE";
+    }
+    
+    private String stateTransition(char c, String state) {
+        switch (state){
+            case "EMPTY":
+                if (Character.isDigit(c)) return "DECIMAL_START_DIGIT";
+                if (c == '+' || c == '-') return "DECIMAL_SIGN";
+                if (c == '.') return "DECIMAL_DOT_START";
+                return "FAIL";
+            
+            case "DECIMAL_START_DIGIT":
+                if (c == '#') return "DONE";
+                if (Character.isDigit(c)) return "DECIMAL_START_DIGIT";
+                if (c == '.') return "DECIMAL_DOT_MIDDLE";
+                if (c == 'e' || c == 'E') return "EXP";
+                return "FAIL";
+          
+            case "DECIMAL_MID_DIGIT":
+                if (c == '#') return "DONE";
+                if (Character.isDigit(c)) return "DECIMAL_MID_DIGIT";
+                if (c == 'e' || c == 'E') return "EXP";
+                return "FAIL";
+            
+            case "DECIMAL_SIGN":
+                if (Character.isDigit(c)) return "DECIMAL_START_DIGIT";
+                if (c == '.') return "DECIMAL_DOT_START";
+                return "FAIL";
+            
+            case "DECIMAL_DOT_START":
+                if (Character.isDigit(c)) return "DECIMAL_MID_DIGIT";
+                return "FAIL";
+                
+            case "DECIMAL_DOT_MIDDLE":
+                if (c == '#') return "DONE";
+                if (Character.isDigit(c)) return "DECIMAL_MID_DIGIT";
+                if (c == 'e' || c == 'E') return "EXP";
+                return "FAIL";
+            
+            case "EXP": 
+                if (c == '+' || c == '-') return "EXP_SIGN";
+                if (Character.isDigit(c)) return "EXP_DIGIT";
+                return "FAIL";
+                
+            case "EXP_SIGN": 
+                if (Character.isDigit(c)) return "EXP_DIGIT";
+                return "FAIL";
+                
+            case "EXP_DIGIT": 
+                if (c == '#') return "DONE";
+                if (Character.isDigit(c)) return "EXP_DIGIT";
+                return "FAIL";
+        }
+        return "FAIL";
     }
 }
