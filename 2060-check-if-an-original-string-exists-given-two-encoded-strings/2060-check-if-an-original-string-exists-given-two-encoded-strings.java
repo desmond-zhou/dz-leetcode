@@ -1,14 +1,7 @@
 class Solution {
-
-    /**
-    public static void main(String[] args) {
-        Solution sol = new Solution();
-        boolean result = sol.possiblyEquals("g141g9g94q592q62g78g779q61g779g28", "g2q4g795g87g828q321g532g195q11g77");
-        System.out.println(result);
-    } **/
-
     final int[] singleSkip = new int[]{0, 0};
     final HashSet<List<Integer>> failMemo = new HashSet<>();
+    
     String string1;
     String string2;
 
@@ -25,24 +18,24 @@ class Solution {
 
         while (true) {
             if (wildcards1 > 0) {
-                if (isEnd(i2, string2)) return false;
-                if (isLetter(i2, string2)) {
+                if (isEnd(i2, string2)) return false; // wildcard but the other is done
+                if (isLetter(i2, string2)) { // wild card used
                     wildcards1--;
                     i2++;
                 }
-                else break;
+                else break; // wildcard meeting number
             } else if (wildCards2 > 0) {
-                if (isEnd(i1, string1)) return false;
-                if (isLetter(i1, string1)) {
+                if (isEnd(i1, string1)) return false; // wildcard but the other is done
+                if (isLetter(i1, string1)) { // wild card used
                     wildCards2--;
                     i1++;
                 }
-                else break;
+                else break; // wildcard meeting number
             } else {
-                if (isEnd(i2, string2) && isEnd(i1, string1)) return true; // both done
-                else if (isEnd(i2, string2) || isEnd(i1, string1)) return false; // one end other did not
-                else if (isLetter(i1, string1) && isLetter(i2, string2)) { // both letter
-                    if (string1.charAt(i1) != string2.charAt(i2)) return false; // no match is fail
+                if (isEnd(i2, string2) && isEnd(i1, string1)) return true; // both happen to be done
+                else if (isEnd(i2, string2) || isEnd(i1, string1)) return false; // one ended while the other did not
+                else if (isLetter(i1, string1) && isLetter(i2, string2)) { // both letter used
+                    if (string1.charAt(i1) != string2.charAt(i2)) return false; // letter with no match is fail
                     i1++;
                     i2++;
                 }
@@ -50,12 +43,12 @@ class Solution {
             }
         }
 
-        // one of the wildcard and following letter is exhausted, the other wildcard still remains
+        // processed all cancellations and letters, one side may have wildcard, the other side will have new numbers
 
-        final List<Integer> memoState = List.of(i1, wildcards1, i2, wildCards2);
+        final List<Integer> memoState = List.of(i1, wildcards1, i2, wildCards2); // memo to optimize failed state
+        if (failMemo.contains(memoState)) return false; // check memo
 
-        if (failMemo.contains(memoState)) return false;
-
+        // generate all possible wildcards from numerical values
         Set<int[]> skips1 = !isEnd(i1, string1) && !isLetter(i1, string1) ? extractSkips(string1, i1) : Set.of(singleSkip);
         Set<int[]> skips2 = !isEnd(i2, string2) && !isLetter(i2, string2) ? extractSkips(string2, i2) : Set.of(singleSkip);
 
@@ -65,12 +58,13 @@ class Solution {
                         i1 + candidates1[0],
                         wildcards1 + candidates1[1],
                         i2 + candidates2[0],
-                        wildCards2 + candidates2[1]);
-                if (result) return true;
+                        wildCards2 + candidates2[1]); // recurse for all combinations of possible wildcards
+                
+                if (result) return true; // if any of the recursion yielded good result, return true
             }
         }
 
-        failMemo.add(memoState);
+        failMemo.add(memoState); // if no recursion yielded good result, add to memo and return false
         return false;
     }
 
