@@ -21,12 +21,8 @@ class Solution {
             ListNode node = pq.poll();
             cur.next = node;
             cur = node;
-            if (node.next != null) {
-                pq.offer(node.next);
-            }
-            node.next = null;
+            if (node.next != null) pq.offer(node.next);
         }
-        
         return newRoot.next;
     }
 }
