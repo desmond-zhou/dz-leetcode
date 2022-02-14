@@ -8,7 +8,7 @@ public class Solution {
         // finding the h-index
         int k = n;
         for (int s = papers[n]; k > s; s += papers[k]) {
-            System.out.println("Sum of paper above: " + k + " ,is: " + s);
+            //System.out.println("Sum of paper above: " + k + " ,is: " + s);
             k--;
         }
         return k;
