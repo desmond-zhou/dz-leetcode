@@ -8,8 +8,10 @@ class Solution {
     
     private void recur(int[] candidates, int target, List<Integer> soFar, int sum, int startIndex) {
         if (sum > target) return;
+        
         if (sum == target) {
             results.add(new ArrayList<>(soFar));
+            return;
         }
         
         for (int i = startIndex; i < candidates.length; i++) {
